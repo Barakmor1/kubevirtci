@@ -40,10 +40,6 @@ if [ ! -f alpine-make-vm-image ]; then
     chmod 755 alpine-make-vm-image
 fi
 
-# KubeVirt uses direct kernel boot (-kernel/-initrd flags to QEMU), so the
-# disk bootloader is never used. Patch out the extlinux and syslinux setup
-# because extlinux --install hangs in containerized CI environments due to
-# direct I/O on the NBD block device.
 sed -i 's/chroot "$mnt" extlinux --install \/boot/true # extlinux skipped/' alpine-make-vm-image
 sed -i '/chroot "$mnt" update-extlinux/,/; } >&2/c\\ttrue # update-extlinux skipped' alpine-make-vm-image
 
